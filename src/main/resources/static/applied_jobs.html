@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Applied Jobs</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h1 class="mb-4 text-primary">Your Applications</h1>
+    <div id="appliedJobList" class="row">
+        <p>Loading your applications...</p>
+    </div>
+    <p><a href="jobs.html" class="btn btn-secondary">Back to Job Listings</a></p>
+</div>
+<script src="js/utils.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', fetchAppliedJobs);
+
+    async function fetchAppliedJobs() {
+        const candidateId = localStorage.getItem('userId');
+        const listDiv = document.getElementById('appliedJobList');
+
+        if (!candidateId) {
+            listDiv.innerHTML = '<div class="col-12"><p class="text-danger">Please log in to view your applications.</p></div>';
+            return;
+        }
+
+        try {
+            const applications = await fetchApi(`/api/applications/candidate/${candidateId}`, 'GET');
+            listDiv.innerHTML = '';
+
+            if (applications.length === 0) {
+                listDiv.innerHTML = '<div class="col-12"><p class="text-muted">You have not applied for any jobs yet.</p></div>';
+                return;
+            }
+
+            applications.forEach(app => {
+                const job = app.job || {}; // Ensure job exists
+                const score = app.screeningScore ? (app.screeningScore * 100).toFixed(0) : 'N/A';
+                let statusClass;
+                if (app.status === 'SUBMITTED') statusClass = 'info';
+                else if (app.status.includes('SCREENED')) statusClass = 'primary';
+                else if (app.status === 'INTERVIEW_SCHEDULED') statusClass = 'success';
+                else statusClass = 'danger';
+
+                const card = document.createElement('div');
+                card.className = 'col-lg-6 mb-4';
+                card.innerHTML = `
+                    <div class="card h-100 shadow-sm border-${statusClass}">
+                        <div class="card-body">
+                            <h5 class="card-title">${job.title || 'Job Not Found'}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">${job.location || ''}</h6>
+                            <p class="card-text"><strong>Status:</strong> <span class="badge bg-${statusClass}">${app.status}</span></p>
+                            <p class="card-text"><strong>Initial Score:</strong> ${score}%</p>
+                            <p class="card-text"><small class="text-muted">Applied on: ${new Date(app.appliedDate).toLocaleDateString()}</small></p>
+                        </div>
+                    </div>
+                `;
+                listDiv.appendChild(card);
+            });
+        } catch (error) {
+            listDiv.innerHTML = `<div class="col-12"><p class="text-danger">Error loading applications: ${error.message}</p></div>`;
+            console.error('Error fetching applications:', error);
+        }
+    }
+</script>
+</body>
+</html>

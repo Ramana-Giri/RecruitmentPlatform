@@ -1,0 +1,6 @@
+/* Custom styles (Bootstrap handles most of the heavy lifting) */
+body {
+    background-color: #f8f9fa;
+}
+
+/* Ensure the JS files are loaded */
