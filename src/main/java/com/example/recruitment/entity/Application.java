@@ -13,13 +13,14 @@ public class Application {
     @JoinColumn(name = "candidate_id")
     private Candidate candidate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "job_id")
     private Job job;
 
     private LocalDateTime appliedDate = LocalDateTime.now();
     private String status = "SUBMITTED";
     private Double screeningScore;
+    private String resumeFilePath;
 
     public Application() {}
 
@@ -30,6 +31,7 @@ public class Application {
     public LocalDateTime getAppliedDate() { return appliedDate; }
     public String getStatus() { return status; }
     public Double getScreeningScore() { return screeningScore; }
+    public String getResumeFilePath() { return resumeFilePath; }
 
     // Setters
     public void setId(Long id) { this.id = id; }
@@ -38,4 +40,5 @@ public class Application {
     public void setAppliedDate(LocalDateTime appliedDate) { this.appliedDate = appliedDate; }
     public void setStatus(String status) { this.status = status; }
     public void setScreeningScore(Double screeningScore) { this.screeningScore = screeningScore; }
+    public void setResumeFilePath(String resumeFilePath) { this.resumeFilePath = resumeFilePath; }
 }

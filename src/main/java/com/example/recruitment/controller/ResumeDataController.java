@@ -18,24 +18,17 @@ public class ResumeDataController {
         this.resumeDataRepository = resumeDataRepository;
     }
 
-    // Endpoint secured by ROLE_ADMIN through SecurityConfig
-    @GetMapping("/application/{applicationId}")
-    public ResponseEntity<ResumeData> getParsedResumeByApplicationId(@PathVariable Long applicationId) {
-        // Find the resume data linked to the application ID
-        // Note: You would need to add a findByApplicationId method to the ResumeDataRepository
+    // This space is reserved for methods that retrieve PARSED resume data (e.g., skills, experience),
+    // which should use a different path to avoid conflicts.
+    // The previous conflicting method has been removed.
 
-        // For now, let's find it by a direct link if possible (assuming one-to-one)
-        // If your repository supports it:
-        // return resumeDataRepository.findByApplicationId(applicationId)
-        //     .map(ResponseEntity::ok)
-        //     .orElse(ResponseEntity.notFound().build());
+    /* Example of a future, non-conflicting endpoint for parsed data:
 
-        // **Temporary simplified retrieval (requires an adjustment in ResumeDataRepository)**
-        // To make this work without changing the repository structure (for speed), we assume
-        // the ID of the ResumeData is the same as the Application ID for initial seeding.
-        // In a real system, you must implement the findByApplicationId method.
+    @GetMapping("/parsed/{applicationId}")
+    public ResponseEntity<ResumeData> getParsedData(@PathVariable Long applicationId) {
         return resumeDataRepository.findById(applicationId)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+    */
 }
