@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class RecruitmentPlatformApplication {
 
     public static void main(String[] args) {
-        SpringApplication   .run(RecruitmentPlatformApplication.class, args);
+        SpringApplication.run(RecruitmentPlatformApplication.class, args);
     }
 
 }
